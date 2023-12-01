@@ -22,16 +22,18 @@ const CurrencyTable: FC<CurrencyTableProps> = ({ data }) => {
     <Table sx={{ minWidth: 650 }} aria-label="simple table">
       <TableHead>
         <TableRow style={{ maxWidth: isMobile ? '90vw' : undefined }}>
-          <TableCell style={{ width: isMobile ? '60px' : undefined }}>Currency</TableCell>
+          <TableCell style={{ width: isMobile ? '60px' : undefined }}>
+            Currency
+          </TableCell>
           <TableCell
             align="center"
-            style={{ width: isMobile ? '50px' : undefined }}
+            style={{ width: isMobile ? '50px' : '165px' }}
           >
             Buy
           </TableCell>
           <TableCell
             align="center"
-            style={{ width: isMobile ? '50px' : undefined }}
+            style={{ width: isMobile ? '50px' : '165px' }}
           >
             Sell
           </TableCell>

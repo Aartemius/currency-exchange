@@ -1,6 +1,6 @@
 import { 
   FC, 
-  memo, 
+  useEffect, 
   useRef, 
   useState 
 } from "react";
@@ -14,71 +14,60 @@ import {
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import { CurrencyData } from "../types/currency";
 import useViewport from "../hooks/useViewport";
+import useCurrencyStore from "../store/useCurrencyStore";
 
 interface ConverterProps {
   data: CurrencyData[];
 }
 
-const Converter: FC<ConverterProps> = memo(({data}) => {
+const Converter: FC<ConverterProps> = ({data}) => {
   const { isMobile } = useViewport();
 
-  const exchangeRef = useRef({
-    sellingCurrency: data[0].ccy as string,
-    buyingCurrency: data[1].ccy as string,
-    sellingAmount: 100
-  });
+  const sellingCurrencyRef = useRef(data[0].ccy as string);
+  const buyingCurrencyRef = useRef(data[1].ccy as string);
+  const sellingAmountRef = useRef(100);
 
   const [buyValue, setBuyValue] = useState('');
 
-  const handleConvert = () => {
-    const currencyToSell = data?.find(item => item.ccy === exchangeRef.current.sellingCurrency);
-    const currencyToBuy = data?.find(item => item.ccy === exchangeRef.current.buyingCurrency);
-    const convertedAmount = Number(currencyToBuy?.buy) / Number(currencyToSell?.sale) * exchangeRef.current.sellingAmount;
+  const convertCurrencies = () => {
+    const currencyToSell = data?.find(item => item.ccy === sellingCurrencyRef.current);
+    const currencyToBuy = data?.find(item => item.ccy === buyingCurrencyRef.current);
+    const convertedAmount = Number(currencyToSell?.sale) / Number(currencyToBuy?.buy) * sellingAmountRef.current;
 
     setBuyValue(convertedAmount.toFixed(2));
   };
 
+  useEffect(() => {
+    convertCurrencies();
+    const unsubscribe = useCurrencyStore.subscribe(convertCurrencies);
+
+    return unsubscribe;
+  });
+
   const handleSellingCurrencyChange = (event: SelectChangeEvent<string>) => {
-    exchangeRef.current = {
-      ...exchangeRef.current,
-      sellingCurrency: event.target.value
-    };
-    handleConvert();
+    sellingCurrencyRef.current = event.target.value;
+    convertCurrencies();
   }
 
   const handleBuyingCurrencyChange = (event: SelectChangeEvent<string>) => {
-    exchangeRef.current = {
-      ...exchangeRef.current,
-      buyingCurrency: event.target.value
-    };
-    handleConvert();
+    buyingCurrencyRef.current = event.target.value;
+    convertCurrencies();
   }
 
   const handleSellingAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    exchangeRef.current = {
-      ...exchangeRef.current,
-      sellingAmount: Number(event.target.value)
-    };
-    handleConvert();
+    sellingAmountRef.current = Number(event.target.value);
+    convertCurrencies();
   }
 
   const swapCurrencies = () => {
-    const sell = exchangeRef.current.sellingCurrency;
-    const buy = exchangeRef.current.buyingCurrency;
-    exchangeRef.current = {
-      ...exchangeRef.current,
-      sellingAmount: Number(buyValue)
-    };
+    const sell = sellingCurrencyRef.current;
+    const buy = buyingCurrencyRef.current;
+    sellingAmountRef.current = Number(buyValue);
+    sellingCurrencyRef.current = buy;
+    buyingCurrencyRef.current = sell;
 
-    exchangeRef.current = {
-      ...exchangeRef.current,
-      buyingCurrency: sell,
-      sellingCurrency: buy,
-    };
-
-    handleConvert();
+    convertCurrencies();
   }
-
 
   return (
     <div
@@ -97,11 +86,11 @@ const Converter: FC<ConverterProps> = memo(({data}) => {
           label="Change"
           type="number"
           onChange={ handleSellingAmountChange } 
-          value={ exchangeRef.current.sellingAmount.toFixed(2) }
+          value={ sellingAmountRef.current.toFixed(2) }
           style={{ marginRight: '1rem' }}
         />
         <Select
-          value={ exchangeRef.current.sellingCurrency }
+          value={ sellingCurrencyRef.current }
           onChange={ handleSellingCurrencyChange }
         >
           { data?.map(item => (
@@ -131,7 +120,7 @@ const Converter: FC<ConverterProps> = memo(({data}) => {
           style={{ marginRight: '1rem' }}
         />
         <Select
-          value={ exchangeRef.current.buyingCurrency }
+          value={ buyingCurrencyRef.current }
           onChange={ handleBuyingCurrencyChange }
         >
           { data?.map(item => (
@@ -143,6 +132,6 @@ const Converter: FC<ConverterProps> = memo(({data}) => {
       </div>
     </div>
   );
-});
+};
 
 export default Converter;

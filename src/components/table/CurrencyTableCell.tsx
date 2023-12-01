@@ -1,12 +1,16 @@
 import { FC, useState } from 'react';
 import { isDifferenceLessTenPercent } from '../../utils/common';
-import { Input, IconButton, TableCell } from '@mui/material';
+import { 
+  Input, 
+  IconButton, 
+  TableCell 
+} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import useCurrencyStore from '../../store/useCurrencyStore';
 import { CurrencyData, CurrencyParams } from '../../types/currency';
 import useViewport from '../../hooks/useViewport';
+import CheckIcon from '@mui/icons-material/Check';
 
 interface CurrencyTableCellProps {
   cellValue?: string;
@@ -60,20 +64,38 @@ const CurrencyTableCell: FC<CurrencyTableCellProps> = ({
 
   return (
     <TableCell
-      style={{ padding: '1rem', width: isMobile ? '50px' : '200px' }}
+      style={{
+        padding: '1rem',
+        width: isMobile ? '50px' : '220px'
+      }}
       onMouseEnter={() => {
         if (!isEditing)
         setIsHovered(true)
       }}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div style={{ textAlign: 'center' }}>
+      <div style={{
+        textAlign: 'center',
+        position: 'relative',
+        width: '165px',
+        margin: '0 auto'
+        }}>
         { !isEditing && (
           <>
             <span>{value}</span>
             { isHovered &&
-              <IconButton onClick={() => setIsEditing(true)}>
-                <EditIcon />
+              <IconButton
+                onClick={() => setIsEditing(true)}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  transform: 'translateY(-30%)',
+                  width: '20px', 
+                  height: '20px'
+                }}
+              >
+                <EditIcon style={{ width: '15px', height: '15px' }} />
               </IconButton>
             }
           </>
@@ -84,17 +106,29 @@ const CurrencyTableCell: FC<CurrencyTableCellProps> = ({
             value={ editingValue }
             onChange={ (e) => setEditingValue(e.target.value) }
             endAdornment={
-              <>
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '-7px',
+                  right: 0,
+                  height: '20px',
+                  display: 'flex'
+                }}
+              >
                 <IconButton
                   onClick={ handleSaveValue }
                   disabled={ !isDifferenceLessTenPercent(editingValue, cellValue) }
+                  style={{ height: '20px', width: '20px' }}
                 >
-                  <SaveIcon />
+                  <CheckIcon style={{ height: '15px', width: '15px' }} />
                 </IconButton>
-                <IconButton onClick={ handleCancel }>
-                  <CancelIcon />
+                <IconButton 
+                  onClick={ handleCancel } 
+                  style={{ height: '20px', width: '20px' }}
+                >
+                  <CancelIcon style={{ height: '15px', width: '15px' }} />
                 </IconButton>
-              </>
+              </div>
             }
           />
         )}
