@@ -20,11 +20,11 @@ interface ConverterProps {
   data: CurrencyData[];
 }
 
-const Converter: FC<ConverterProps> = ({data}) => {
+const Converter: FC<ConverterProps> = ({ data }) => {
   const { isMobile } = useViewport();
 
-  const sellingCurrencyRef = useRef(data[0].ccy as string);
-  const buyingCurrencyRef = useRef(data[1].ccy as string);
+  const sellingCurrencyRef = useRef(data[0].ccy);
+  const buyingCurrencyRef = useRef(data[1].ccy);
   const sellingAmountRef = useRef(100);
 
   const [buyValue, setBuyValue] = useState('');
@@ -93,7 +93,8 @@ const Converter: FC<ConverterProps> = ({data}) => {
           value={ sellingCurrencyRef.current }
           onChange={ handleSellingCurrencyChange }
         >
-          { data?.map(item => (
+          { data?.filter(item => item.ccy !== buyingCurrencyRef.current)
+            .map(item => (
             <MenuItem key={ item.ccy } value={ item.ccy }>
               { item.ccy }
             </MenuItem>
@@ -123,7 +124,8 @@ const Converter: FC<ConverterProps> = ({data}) => {
           value={ buyingCurrencyRef.current }
           onChange={ handleBuyingCurrencyChange }
         >
-          { data?.map(item => (
+          { data?.filter(item => item.ccy !== sellingCurrencyRef.current)
+            .map(item => (
             <MenuItem key={ item.ccy } value={ item.ccy }>
               { item.ccy }
             </MenuItem>

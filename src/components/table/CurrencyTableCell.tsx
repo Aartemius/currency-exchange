@@ -13,7 +13,7 @@ import useViewport from '../../hooks/useViewport';
 import CheckIcon from '@mui/icons-material/Check';
 
 interface CurrencyTableCellProps {
-  cellValue?: string;
+  cellValue: string;
   currency: CurrencyData;
   currencyParam: CurrencyParams;
 }
@@ -39,11 +39,9 @@ const CurrencyTableCell: FC<CurrencyTableCellProps> = ({
         if (index !== -1) {
           switch (currencyParam) {
             case CurrencyParams.buy:
-              // @ts-ignore
               data[index].buy = editingValue;
               break;
             case CurrencyParams.sale:
-              // @ts-ignore
               data[index].sale = editingValue;
               break;
             default:

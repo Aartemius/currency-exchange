@@ -5,8 +5,8 @@ export enum CurrencyParams {
   sale = 'sell'
 }
 export interface CurrencyData {
-  base_ccy: CurrencyParams.base_ccy;
-  ccy: CurrencyParams.ccy;
-  buy: CurrencyParams.buy;
-  sale: CurrencyParams.sale;
+  base_ccy: string;
+  ccy: string;
+  buy: string;
+  sale: string;
 }

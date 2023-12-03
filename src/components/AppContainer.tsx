@@ -46,7 +46,14 @@ const AppContainer = () => {
       { !isRequestError && data &&
         <>
           <CurrencyTable data={ data } />
-          <Converter data={ data } />
+          <Converter
+            data={ [{
+              ccy:"UAH",
+              base_ccy:"UAH",
+              buy:"1",
+              sale:"1"
+            }, ...data] }
+          />
         </>
       }
     </div>
