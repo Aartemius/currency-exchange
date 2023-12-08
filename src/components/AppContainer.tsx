@@ -32,7 +32,7 @@ const AppContainer = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [swrData])
 
-  const isRequestError = requestsCounter % 5 === 0;
+  const isRequestError = requestsCounter % 5 === 0 && requestsCounter !== 0;
 
   if (error) {
     console.error(error.message);
