@@ -9,7 +9,8 @@ import {
   MenuItem, 
   TextField, 
   SelectChangeEvent, 
-  IconButton
+  IconButton,
+  InputAdornment
 } from "@mui/material";
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import { CurrencyData } from "../types/currency";
@@ -119,6 +120,9 @@ const Converter: FC<ConverterProps> = ({ data }) => {
           type="number"
           value={ buyValue }
           style={{ marginRight: '1rem' }}
+          InputProps={{
+            inputProps: { readOnly: true }
+          }}
         />
         <Select
           value={ buyingCurrencyRef.current }
